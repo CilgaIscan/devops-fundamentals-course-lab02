@@ -1,0 +1,8 @@
+[submodule "projects/backend"]
+	path = projects/backend
+	url = https://github.com/CilgaIscan/nestjs-rest-api-devops-lab02.git
+	branch = feat/products-api
+[submodule "projects/frontend"]
+	path = projects/frontend
+	url = https://github.com/CilgaIscan/shop-angular-cloudfront.git
+	branch = devops-lab02
