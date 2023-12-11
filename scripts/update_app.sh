@@ -28,7 +28,17 @@ restart_nginx() {
     sudo systemctl restart nginx
 }
 
+update_source() {
+    cd $APP_ROOT
+    git pull --recurse-submodules
+}
+
+
 main() {
+    echo "Updating source code..."
+    update_source
+    echo "[COMPLETED] Updating source code..."
+
     echo "Installing the dependencies for backend..."
     install_dependencies $BACKEND_SRC
     echo "[COMPLETED] Installing the dependencies for backend..."
