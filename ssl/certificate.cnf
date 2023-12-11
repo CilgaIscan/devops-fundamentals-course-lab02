@@ -1,0 +1,23 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+x509_extensions = v3_req
+distinguished_name = dn
+
+[dn]
+C = PL
+ST = Lesser Poland
+L = Krakow
+O = CIT
+OU = CIT/Eng1
+emailAddress = cilgaiscan@gmail.com
+CN = www.devops-lab02.net
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = devops-lab02.net
+DNS.2 = www.devops-lab02.net
+DNS.2 = api.devops-lab02.net

@@ -19,6 +19,22 @@ NGINX_TARGET_SITES_ENABLED=$NGINX_TARGET_ROOT/sites-enabled
 NGINX_TARGET_PATH=$NGINX_TARGET_SITES_AVAILABLE/$DOMAIN_NAME
 NGINX_TARGET_SYM_LINK=$NGINX_TARGET_SITES_ENABLED/$DOMAIN_NAME
 
+update_source() {
+    cd $APP_ROOT
+    git pull --recurse-submodules
+
+}
+
+update_nginx() {
+    sudo cp $NGINX_CONF_SRC_PATH $NGINX_TARGET_PATH
+    
+    if [[ -f $NGINX_TARGET_SYM_LINK ]]; then
+        echo "File exists: $NGINX_TARGET_SYM_LINK"
+    else
+        echo "File not found: $NGINX_TARGET_SYM_LINK! We are creating the symbolic link..."
+        sudo ln -s $NGINX_TARGET_PATH $NGINX_TARGET_SITES_ENABLED
+    fi
+}
 
 install_dependencies() {
     cd $1
@@ -36,28 +52,18 @@ restart_backend() {
     npm run start:pm2
 }
 
-restart_nginx() {
-    sudo cp $NGINX_CONF_SRC_PATH $NGINX_TARGET_PATH
-    
-    if [[ -f $NGINX_TARGET_SYM_LINK ]]; then
-        echo "File exists: $NGINX_TARGET_SYM_LINK"
-    else
-        echo "File not found: $NGINX_TARGET_SYM_LINK! We are creating the symbolic link..."
-        sudo ln -s $NGINX_TARGET_PATH $NGINX_TARGET_SITES_ENABLED
-    fi
-    
+restart_nginx() {   
     sudo systemctl restart nginx
-}
-
-update_source() {
-    cd $APP_ROOT
-    git pull --recurse-submodules
 }
 
 main() {
     echo "Updating source code..."
     update_source
     echo "[COMPLETED] Updating source code..."
+
+    echo "Updating NGINX config..."
+    update_nginx
+    echo "[COMPLETED] Updating NGINX config..."
 
     echo "Installing the dependencies for backend..."
     install_dependencies $BACKEND_SRC
