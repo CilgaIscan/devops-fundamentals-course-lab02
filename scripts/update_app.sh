@@ -8,6 +8,17 @@ BACKEND_DIST=$BACKEND_SRC/dist
 FRONTEND_SRC=$APP_ROOT/projects/frontend
 FRONTEND_DIST=$FRONTEND_SRC/dist
 
+DOMAIN_NAME=devops-lab02
+NGINX_CONF_FILENAME=$DOMAIN_NAME.conf
+NGINX_CONF_SRC=$(pwd)/nginx
+NGINX_CONF_SRC_PATH=$NGINX_CONF_SRC/$NGINX_CONF_FILENAME
+
+NGINX_TARGET_ROOT=/etc/nginx
+NGINX_TARGET_SITE_AVAILABLE=$NGINX_TARGET_ROOT/sites-available
+NGINX_TARGET_SITE_ENABLED=$NGINX_TARGET_ROOT/sites-enabled
+NGINX_TARGET_PATH=$NGINX_TARGET_SITE_AVAILABLE/$DOMAIN_NAME
+
+
 install_dependencies() {
     cd $1
     npm i
@@ -25,6 +36,14 @@ restart_backend() {
 }
 
 restart_nginx() {
+    sudo cp $NGINX_CONF_SRC_PATH $NGINX_TARGET_PATH
+    
+    if [[ -f $NGINX_TARGET_SITE_ENABLED ]]; then
+        echo "File exists: $NGINX_TARGET_SITE_ENABLED"
+    else
+        sudo ln -s $NGINX_TARGET_PATH $NGINX_TARGET_SITE_ENABLED
+    fi
+    
     sudo systemctl restart nginx
 }
 
